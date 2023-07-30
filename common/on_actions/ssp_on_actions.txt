@@ -6,6 +6,7 @@ on_survey = {
 on_game_start_country = {
 	events = {
         necroids.1000
+        phi_game_start.0
     }
 }
 
@@ -29,6 +30,13 @@ on_monthly_pulse_country = {
         ssp_relic.400
     }
 }
+
+on_yearly_pulse_country = {
+    events = {
+        sublimation.0
+    }
+}
+
 
 on_entering_system_fleet = {
     events = {

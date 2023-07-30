@@ -1,0 +1,73 @@
+
+sublimation_situation_set_tech_output = {
+	owner = {
+#		export_resource_income_to_variable = { resource = physics_research variable = sublimation_situation_phy_upkeep }
+		export_resource_income_to_variable = { resource = society_research variable = sublimation_situation_soc_progress }
+		
+		#set_variable = {
+		#	which = sublimation_situation_soc_progress
+		#	value = 0
+		#}		
+
+	}
+}
+sublimation_situation_get_tech_output = {
+	owner = {
+#		export_resource_income_to_variable = { resource = physics_research variable = sublimation_situation_phy_upkeep }
+		export_resource_income_to_variable = { resource = society_research variable = sublimation_situation_soc_inc }
+		prev = {
+			switch = {
+				trigger = has_situation_flag
+				sonphi_no_modding = {
+					owner = {
+						set_variable = {
+							which = sublimation_situation_soc_progress
+							value = 0
+						}
+					}
+				}
+				sonphi_low_modding = {
+					owner = {
+						multiply_variable = {
+							which = sublimation_situation_soc_progress
+							value = 0.25
+						}
+					}
+				}
+				sonphi_mid_modding = {
+					owner = {
+						multiply_variable = {
+							which = sublimation_situation_soc_progress
+							value = 0.5
+						}
+					}
+				}
+				sonphi_high_modding = {
+					owner = {
+						multiply_variable = {
+							which = sublimation_situation_soc_progress
+							value = 1
+						}
+					}
+				}
+				default = {
+					owner = {
+						set_variable = {
+							which = sublimation_situation_soc_progress
+							value = 0
+						}
+					}
+				}
+			}
+		}
+
+		change_variable = {
+			which = sublimation_situation_soc_progress
+			value = sublimation_situation_soc_inc
+		}
+		round_variable_to_closest = {
+			which = sublimation_situation_soc_progress
+			value = 0.01
+		}
+	}
+}

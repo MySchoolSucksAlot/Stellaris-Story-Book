@@ -1,0 +1,284 @@
+#
+# New Situation Sublimation
+#
+
+@phi_sublimation_cost_low = 0.25
+@phi_sublimation_cost_mid = 0.5
+@phi_sublimation_cost_high = 1
+@phi_sublimation_mult_low = 0.25
+@phi_sublimation_mult_mid = 0.45
+@phi_sublimation_mult_high = 0.81
+
+situation_phi_sublimation_modding = {
+	desc = {
+		text = "TBD"
+		trigger = {
+			hidden_trigger = {
+				always = yes
+			}
+		}
+	}
+	picture = GFX_evt_wormhole
+	category = positive
+	complete_icon_frame = GFX_situation_outcome_frame_green
+	complete_icon = GFX_situation_outcome_unknown
+	fail_icon_frame = GFX_situation_outcome_frame_red
+	fail_icon = GFX_situation_outcome_negative
+	start_value = 0
+	progress_direction = monodirectional
+	
+	on_start = {
+	#	set_situation_locked = yes
+	owner = { sublimation_situation_set_tech_output = yes }
+	}
+
+	on_fail = {
+		# This should never happen, but if it does...
+		owner = {
+			start_situation = {
+				type = situation_phi_sublimation_modding
+				target = capital_scope
+				effect = {
+					save_event_target_as = new_situation
+				}
+			}
+		}
+		event_target:new_situation = {
+			set_situation_locked = no
+		}
+	}
+
+	on_monthly = {
+		owner = { sublimation_situation_get_tech_output = yes }
+		random_events = {
+			# Nothing	
+			50 = 0
+			10 = sublimation.800
+			10 = sublimation.500
+			12 = sublimation.600
+			7 = sublimation.900
+			5 = sublimation.700
+			4 = sublimation.1100
+			2 = sublimation.1000
+		}
+		#make sure this doesnt fire when the project is ON HOLD ^^^
+	}
+	
+	on_progress_complete = {
+		hidden_effect = {
+			owner = {
+				country_event = { id = sublimation.7 }
+			}
+			destroy_situation = this
+		}
+		custom_tooltip = "TBD-sublimation-End"
+		destroy_situation = this
+	}
+
+	stages = {
+		situation_phi_sublimation_modding_stage_1 = { # 0 - 10%
+			icon = GFX_situation_stage_1
+			icon_background = GFX_situation_stage_frame_blue
+			end = 50000
+		}
+		situation_phi_sublimation_modding_stage_2 = { # 10 - 20%
+			icon = GFX_situation_stage_2
+			icon_background = GFX_situation_stage_frame_green
+			end = 100000
+		}
+#		situation_phi_sublimation_modding_stage_3 = { # 20 - 30%
+#			icon = GFX_situation_stage_3
+#			icon_background = GFX_situation_stage_frame_tec_yellow
+#			end = 30
+#			on_first_enter = {
+#				hidden_effect = {
+#					situation_event = {
+#						id = tec_cyberpsionic_path.30020
+#					}
+#				}
+#			}
+#		}
+#		situation_phi_sublimation_modding_stage_4 = { # 30 - 50%
+#			icon = GFX_situation_stage_4
+#			icon_background = GFX_situation_stage_frame_tec_yellow
+#			end = 50
+#			on_first_enter = {
+#				hidden_effect = {
+#					situation_event = {
+#						id = tec_cyberpsionic_path.30030
+#					}
+#				}
+#			}
+#		}
+#		situation_phi_sublimation_modding_stage_5 = { # 50 - 60%
+#			icon = GFX_situation_stage_5
+#			icon_background = GFX_situation_stage_frame_green
+#			end = 60
+#			on_first_enter = {
+#				hidden_effect = {
+#					situation_event = {
+#						id = tec_cyberpsionic_path.30050
+#					}
+#				}
+#			}
+#		}
+#		situation_phi_sublimation_modding_stage_6 = { # 60 - 100%
+#			icon = GFX_situation_stage_6
+#			icon_background = GFX_situation_stage_frame_green
+#			end = 100
+#			on_first_enter = {
+#				hidden_effect = {
+#					situation_event = {
+#						id = tec_cyberpsionic_path.30060
+#					}
+#				}
+#			}
+#		}
+	}
+
+	# Approaches
+
+		approach = { # Low
+			name = "situation_phi_sublimation_modding_low"
+			icon = GFX_situation_approach_research
+			icon_background = GFX_situation_approach_bg_yellow
+			potential = {
+				exists = owner
+			}
+			on_select = {
+				custom_tooltip = situation_phi_sublimation_modding_low_tooltip
+				hidden_effect = {
+					sublimation_situation_get_tech_output = yes
+					remove_situation_flag = sonphi_no_modding
+					set_situation_flag = sonphi_low_modding
+					remove_situation_flag = sonphi_mid_modding
+					remove_situation_flag = sonphi_high_modding
+				}
+			}
+			resources = {
+				category = situations
+				upkeep = {
+					society_research = 1
+					add = owner.sublimation_situation_soc_progress
+					multiplier = 0.25
+				}
+			}
+		}
+		approach = { # Mid
+			name = "situation_phi_sublimation_modding_mid"
+			icon = GFX_situation_approach_research
+			icon_background = GFX_situation_approach_bg_green
+			potential = {
+				exists = owner
+			}
+			on_select = {
+				custom_tooltip = situation_phi_sublimation_modding_mid_tooltip
+				hidden_effect = {
+					sublimation_situation_get_tech_output = yes
+					remove_situation_flag = sonphi_no_modding
+					remove_situation_flag = sonphi_low_modding
+					set_situation_flag = sonphi_mid_modding
+					remove_situation_flag = sonphi_high_modding
+				}
+			}
+			resources = {
+				category = situations
+				upkeep = {
+					society_research = 10
+					add = owner.sublimation_situation_soc_progress
+					multiplier = 0.5
+				}
+			}
+		}
+		approach = { # High
+			name = "situation_phi_sublimation_modding_high"
+			icon = GFX_situation_approach_research
+			icon_background = GFX_situation_approach_bg_tec_blue
+			potential = {
+				exists = owner
+			}
+			on_select = {
+				custom_tooltip = situation_phi_sublimation_modding_high_tooltip
+				hidden_effect = {
+					sublimation_situation_get_tech_output = yes
+					remove_situation_flag = sonphi_no_modding
+					remove_situation_flag = sonphi_low_modding
+					remove_situation_flag = sonphi_mid_modding
+					set_situation_flag = sonphi_high_modding
+				}
+			}
+			resources = {
+				category = situations
+				upkeep = {
+					society_research = 1
+					add = owner.sublimation_situation_soc_progress
+					multiplier = 1
+				}
+			}
+		}
+		approach = { # None
+			name = "situation_phi_sublimation_modding_none"
+			icon = GFX_situation_approach_research
+			icon_background = GFX_situation_approach_bg_red
+			potential = {
+				exists = owner
+			}
+			on_select = {
+				custom_tooltip = situation_phi_sublimation_modding_none_tooltip
+				hidden_effect = {
+					sublimation_situation_get_tech_output = yes
+					set_situation_flag = sonphi_no_modding
+					remove_situation_flag = sonphi_low_modding
+					remove_situation_flag = sonphi_mid_modding
+					remove_situation_flag = sonphi_high_modding
+				}
+			}
+			resources = {
+				category = situations
+				upkeep = {
+					society_research = 1
+					add = owner.sublimation_situation_soc_progress
+					multiplier = 0
+				}
+			}
+		}
+
+	# /
+
+	monthly_progress = {
+		base = 0
+		add = owner.sublimation_situation_soc_progress
+		# Approaches
+		modifier = {
+			multiplier = 0.25
+			desc = situation_string_phi_sublimation_modding_low
+			current_situation_approach = situation_phi_sublimation_modding_low
+		}
+		modifier = {
+			multiplier = 0.4
+			desc = situation_string_phi_sublimation_modding_mid
+			current_situation_approach = situation_phi_sublimation_modding_mid
+		}
+		modifier = {
+			multiplier = 0.81
+			desc = situation_string_phi_sublimation_modding_high
+			current_situation_approach = situation_phi_sublimation_modding_high
+		}
+		modifier = {
+			multiplier = 0
+			desc = situation_string_phi_sublimation_modding_none
+			current_situation_approach = situation_phi_sublimation_modding_none
+		}
+
+#		modifier = {
+#			mult = 0.5
+#			desc = situation_string_phi_sublimation_modding_at_war
+#			has_situation_flag = situation_tec_cyberpsionic_path_t2_slow_progress
+#			has_country_flag = 
+#		}
+	}
+
+	abort_trigger = {
+		NOT = { exists = owner }
+	}
+}
